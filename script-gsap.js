@@ -51,7 +51,7 @@ const panelConfig = {
         characterSize: { width: "80%", height: "70%" },
         characterPosition: { bottom: "0%", left: "0%" },
         speechBubblePosition: { top: "10%", left: "55%", width: "45%", height: "30%" },
-        hasFloating: false // Set to false - floating will be triggered by special transition
+        hasFloating: true
     },
     2: {
         background: 'images/background2.png',
@@ -612,24 +612,6 @@ function transitionToPanel(targetPanel, targetMorphStage = 0) {
         filter: "none"
     });
     
-    // SPECIAL CASE: Panel 1 to Panel 0 - Stop floating and transition back
-    if (currentPanel === 1 && targetPanel === 0) {
-        // Kill floating animation
-        if (bubbleFloatAnimation) {
-            bubbleFloatAnimation.kill();
-            bubbleFloatAnimation = null;
-        }
-        // Use normal transition
-    }
-
-    // SPECIAL CASE: Panel 0 to Panel 1 - Character slide-in animation
-    if (currentPanel === 0 && targetPanel === 1) {
-        currentPanel = targetPanel;
-        currentMorphStage = targetMorphStage;
-        specialTransitionToPanel1();
-        return;
-    }
-
     // SPECIAL CASE: Panel 2 to Panel 3 keeps characters in place (still Panel 2 to 3)
     if (currentPanel === 2 && targetPanel === 3) {
         currentPanel = targetPanel;
@@ -697,65 +679,6 @@ function smoothTransitionToPanel3() {
         })
         .call(() => {
             showNavigationButtons();
-        });
-}
-
-// SPECIAL TRANSITION TO PANEL 1 - Character slide-in animation
-function specialTransitionToPanel1() {
-    hideNavigationButtons();
-    
-    const timeline = gsap.timeline();
-    
-    timeline
-        // Fade out Panel 0 content
-        .to(LAYERS.SPEECH, {
-            duration: 0.4,
-            opacity: 0,
-            ease: "power2.out"
-        })
-        .to(LAYERS.BACKGROUND, {
-            duration: 0.6,
-            opacity: 0,
-            ease: "power2.out"
-        }, "-=0.2")
-        
-        .call(() => {
-            // Load Panel 1 content
-            loadPanel(1, 0);
-            
-            // Set initial positions for slide-in animation
-            gsap.set("#background", { x: "100%", opacity: 0 });
-            gsap.set(LAYERS.CHARACTERS, { x: "-100%" });
-            gsap.set(LAYERS.SPEECH, { opacity: 0, scale: 0.8, y: -20 });
-        })
-        
-        // Panel 1 slide-in sequence (recreating original animation)
-        .to("#background", {
-            duration: 1.8,
-            x: "0%",
-            opacity: 1,
-            ease: "power3.out"
-        })
-        .to(LAYERS.CHARACTERS, {
-            duration: 1.8,
-            x: "0%",
-            ease: "power3.out"
-        }, "-=1.4")
-        .to(LAYERS.SPEECH, {
-            duration: 1.0,
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            ease: "back.out(1.7)"
-        }, "-=0.4")
-        .to(".nav-button", {
-            duration: 0.8,
-            opacity: 0.7,
-            ease: "power2.out"
-        }, "+=0.5")
-        .call(() => {
-            // Start floating animation for Panel 1
-            startFloatingAnimation();
         });
 }
 

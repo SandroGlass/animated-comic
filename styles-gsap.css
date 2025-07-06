@@ -231,7 +231,7 @@ body {
 
 @media (max-width: 480px) {
     .comic-stage {
-        width: 95vw;
+        width: 119;
         height: calc(95vw * 5/4); /* Maintain 4:5 ratio */
         border-radius: 4px;
     }
@@ -246,3 +246,4 @@ body {
         height: 80%;
     }
 }
+
