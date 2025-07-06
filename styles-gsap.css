@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #000; /* Keep black for comic stage */
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.comic-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f0f0f0; /* Light gray ONLY for start screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.headline-container {
+    position: relative;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.headline-container img {
+    display: block;
+    margin: 20px auto;
+    max-width: 80vw;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+#headline1,
+#headline2 {
+    opacity: 0; /* Start invisible */
+}
+
+.start-button {
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+    opacity: 0; /* Start invisible */
+}
+
+.start-button:hover {
+    transform: scale(1.1);
+}
+
+.start-button:active {
+    transform: scale(0.95);
+}
+
+/* MAIN COMIC STAGE - Fixed 4:5 aspect ratio container for PORTRAIT layout */
+.comic-stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Force 4:5 aspect ratio for PORTRAIT layout */
+    width: min(80vh, 100vw);
+    height: min(100vh, calc(100vw * 5/4));
+    
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* All layers use the same container size and scale together */
+.background-layer,
+.characters-layer,
+.bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* BACKGROUND LAYER */
+.background-layer {
+    z-index: 1;
+}
+
+.background-layer img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* FORCE PORTRAIT orientation by cropping horizontally */
+    object-fit: cover;
+    object-position: center center;
+    /* Transform to ensure portrait display even if source is landscape */
+    transform: scale(1.2); /* Scale up to fill portrait container */
+}
+
+/* Base background image */
+#backgroundImg {
+    z-index: 1; /* Base layer */
+}
+
+/* Overlay images for morphing effects - MUST be above base */
+#backgroundOverlay1 {
+    z-index: 3; /* Above base background */
+    opacity: 0;
+}
+
+#backgroundOverlay2 {
+    z-index: 4; /* Above overlay 1 */
+    opacity: 0;
+}
+
+/* CHARACTERS LAYER */
+.characters-layer {
+    z-index: 2;
+    /* Position characters to cover bottom area without cutting */
+    width: 80%; /* Good width for character visibility */
+    height: 70%; /* Half the stage height */
+    bottom: 0; /* Anchor to bottom */
+    left: 0; /* LEFT CORNER - no margin */
+}
+
+.characters-layer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* CONTAIN to avoid cutting characters */
+    object-position: left bottom; /* Align to LEFT and bottom */
+}
+
+/* SPEECH BUBBLE LAYER - Remove fixed positioning to allow JavaScript control */
+.bubble-layer {
+    z-index: 3;
+    /* Let JavaScript handle all positioning dynamically */
+}
+
+.bubble-layer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* NAVIGATION BUTTONS */
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.nav-button span {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    user-select: none;
+}
+
+.nav-left {
+    left: 10px;
+}
+
+.nav-right {
+    right: 10px;
+}
+
+.nav-button:hover {
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 1 !important;
+}
+
+.nav-button.active {
+    opacity: 0.7;
+}
+
+.nav-button:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Smaller screens - better mobile experience */
+@media (max-width: 768px) {
+    .comic-stage {
+        width: 90vw;
+        height: calc(90vw * 5/4); /* Maintain 4:5 ratio */
+        border-radius: 4px;
+    }
+    
+    .characters-layer {
+        width: 85%; /* Slightly bigger on mobile */
+        height: 75%; /* More prominent on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .comic-stage {
+        width: 95vw;
+        height: calc(95vw * 5/4); /* Maintain 4:5 ratio */
+        border-radius: 4px;
+    }
+    
+    .start-button {
+        padding: 15px 30px;
+        font-size: 20px;
+    }
+    
+    .characters-layer {
+        width: 90%; /* Even bigger on very small screens */
+        height: 80%;
+    }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Comic Page - GSAP Version</title>
+    <link rel="stylesheet" href="styles-gsap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <div class="comic-container">
+        <div class="start-screen" id="startScreen">
+            <div class="headline-container">
+                <img id="headline1" src="images/headline1.png" alt="Headline 1">
+                <img id="headline2" src="images/headline2.png" alt="Headline 2">
+            </div>
+            <button class="start-button" id="startButton">START</button>
+        </div>
+        
+        <!-- Fixed aspect ratio container for all comic elements -->
+        <div class="comic-stage" id="comicStage">
+            <div class="background-layer" id="background">
+                <img id="backgroundImg" src="images/background.png" alt="Background scene">
+                <img id="backgroundOverlay1" src="" alt="Background overlay 1" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: none;">
+                <img id="backgroundOverlay2" src="" alt="Background overlay 2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: none;">
+            </div>
+            
+            <div class="characters-layer" id="characters">
+                <img id="charactersImg" src="images/characters.png" alt="Characters">
+            </div>
+            
+            <div class="bubble-layer" id="speechBubble" style="position: absolute; width: 45%; height: 30%; top: 10%; left: 55%; z-index: 3;">
+                <img src="images/speechbubble.png" alt="Speech bubble">
+            </div>
+            
+            <!-- Navigation buttons -->
+            <div class="nav-button nav-left" id="navLeft">
+                <span>‹</span>
+            </div>
+            <div class="nav-button nav-right" id="navRight">
+                <span>›</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script-gsap.js"></script>
+</body>
+</html>
